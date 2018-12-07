@@ -1,0 +1,19 @@
+<nav>
+  <ul>
+    <li>
+      <a routerLink="home" [class.active-nav-link]="currentUrl == '/' || currentUrl == '/home'">
+        <mat-icon>home</mat-icon>
+      </a>
+    </li>
+    <li>
+      <a routerLink="accounts" [class.active-nav-link]="currentUrl == '/accounts'">
+        <mat-icon>account_balance</mat-icon>
+      </a>
+    </li>
+    <li>
+      <a routerLink="transactions" [class.active-nav-link]="currentUrl == '/transactions'">
+        <mat-icon>description</mat-icon>
+      </a>
+    </li>
+  </ul>
+</nav>
