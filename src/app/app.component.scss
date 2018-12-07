@@ -1,0 +1,16 @@
+.app-container {
+  mat-sidenav-container {
+    background: #fff;
+  }
+  mat-sidenav {
+    border: none;
+    padding: 10px 5px;
+    background-color: #404040;
+  }
+  mat-sidenav-content {
+    padding: 5px;
+  }
+  .main-content {
+    height: 100vh;
+  }
+}
