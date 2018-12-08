@@ -8,6 +8,8 @@
             <th>Number</th>
             <th>Name</th>
             <th>Type</th>
+            <th>Balance</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -15,6 +17,8 @@
             <td>{{a.number}}</td>
             <td>{{a.name}}</td>
             <td>{{a.type}}</td>
+            <td>{{accountBalance(a)}}</td>
+            <td></td>
           </tr>
         </tbody>
       </table>
@@ -25,20 +29,29 @@
       <form [formGroup]="accountForm">
         <h3>Add New Account</h3>
         <mat-form-field>
-          <input matInput placeholder="Account Number" formControlName="number">
+          <input matInput placeholder="Account Number" formControlName="number" required>
+          <mat-error *ngIf="accountForm.controls.number.hasError('required') && accountForm.controls.number.dirty">
+            This field is required
+          </mat-error>
         </mat-form-field>
         <mat-form-field>
-          <input matInput placeholder="Account Name" formControlName="name">
+          <input matInput placeholder="Account Name" formControlName="name" required>
+          <mat-error *ngIf="accountForm.controls.name.hasError('required') && accountForm.controls.name.dirty">
+            This field is required
+          </mat-error>
         </mat-form-field>
         <mat-form-field>
-          <mat-select placeholder="Account Type" formControlName="type">
+          <mat-select placeholder="Account Type" formControlName="type" required>
             <mat-option [value]="'Asset'">Asset</mat-option>
             <mat-option [value]="'Liability'">Liability</mat-option>
             <mat-option [value]="'Income'">Income</mat-option>
             <mat-option [value]="'Expense'">Expense</mat-option>
           </mat-select>
+          <mat-error *ngIf="accountForm.controls.type.hasError('required') && accountForm.controls.type.dirty">
+            This field is required
+          </mat-error>
         </mat-form-field>&nbsp;&nbsp;
-        <button mat-raised-button color="primary" (click)="addAccount()">Add</button>
+        <button mat-raised-button color="primary" (click)="addAccount()" [disabled]="accountForm.invalid">Add</button>
       </form>
     </div>
   </div>

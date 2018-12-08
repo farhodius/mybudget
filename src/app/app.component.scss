@@ -1,16 +1,42 @@
 .app-container {
+  .header-container {
+    height: 100px;
+    padding: 20px 10px;
+    color: #0099cc;
+    background-color: #404040;
+    border-bottom: 4px solid #ff9900;
+  }
+  .logo-box {
+    float: left;
+  }
+  .logo-box img {
+    height: 50px;
+  }
+  .title-box {
+    margin-left: 70px;
+  }
   mat-sidenav-container {
     background: #fff;
+    min-height: calc(100vh - 165px);
   }
   mat-sidenav {
     border: none;
-    padding: 10px 5px;
+    padding: 10px 10px;
     background-color: #404040;
+    border-right: 4px solid #0099cc;
   }
   mat-sidenav-content {
     padding: 5px;
   }
   .main-content {
-    height: 100vh;
+    // height: 100%;
+  }
+  .footer-container {
+    height: 65px;
+    padding: 20px 10px;
+    color: #0099cc;
+    font-weight: bold;
+    background-color: #404040;
+    border-top: 4px solid #ff9900;
   }
 }

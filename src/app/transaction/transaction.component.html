@@ -1,3 +1,71 @@
-<p>
-  transaction works!
-</p>
+<div class="transactions-container container-fluid">
+  <h3>Transactions</h3>
+  <div class="row">
+    <div class="col">
+      <table class="table table-hover table-sm">
+        <thead class="thead-dark">
+          <tr>
+            <th>Date</th>
+            <th class="text-right">Amount</th>
+            <th>Account</th>
+            <th>Description</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let a of data.accounts">
+          <tr class="table-active">
+            <th colspan="5">{{a.number}} - {{a.name}}: {{account.accountBalance(a) | currency}}</th>
+          </tr>
+          <tr *ngFor="let t of a.transactions">
+            <td>{{t.date}}</td>
+            <td class="text-right">{{t.amount * account.accountTypeSign[a.type] | currency}}</td>
+            <td>{{getAccountByNumber(t.accountNumber).name}} ({{t.accountNumber}})</td>
+            <td>{{t.desc}}</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <form [formGroup]="transactionForm">
+        <h3>Add New Transaction</h3>
+        <mat-form-field>
+          <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="date" required>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="transactionForm.controls.date.hasError('required') && transactionForm.controls.date.touched">
+            This field is required
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="Amount" formControlName="amount" required>
+          <mat-error *ngIf="transactionForm.controls.amount.hasError('required') && transactionForm.controls.amount.touched">
+            This field is required
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-select placeholder="From Account" formControlName="fromAccountNumber" required>
+            <mat-option *ngFor="let a of data.accounts" [value]="a.number">{{a.number}} - {{a.name}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="transactionForm.controls.fromAccountNumber.hasError('required') && transactionForm.controls.fromAccountNumber.touched">
+            This field is required
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-select placeholder="To Account" formControlName="toAccountNumber" required>
+            <mat-option *ngFor="let a of data.accounts" [value]="a.number">{{a.number}} - {{a.name}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="transactionForm.controls.toAccountNumber.hasError('required') && transactionForm.controls.toAccountNumber.touched">
+            This field is required
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="Note" formControlName="desc">
+        </mat-form-field>&nbsp;&nbsp;
+        <button mat-raised-button color="primary" (click)="addTransaction()" [disabled]="transactionForm.invalid">Add</button>
+      </form>
+    </div>
+  </div>
+</div>
