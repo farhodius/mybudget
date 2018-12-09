@@ -26,6 +26,8 @@
     border-right: 4px solid #0099cc;
   }
   mat-sidenav-content {
+    height: calc(100vh - 175px);
+    overflow: auto;
     padding: 5px;
   }
   .main-content {

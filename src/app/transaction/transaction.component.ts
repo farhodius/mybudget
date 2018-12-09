@@ -3,9 +3,9 @@ import { DataService } from '../data.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AccountInterface } from '../interfaces/AccountInterface';
 import { TransactionInterface } from '../interfaces/TransactionInterface';
-import { AccountType } from '../modules/AccountType';
 import { Account } from '../modules/Account';
 import { formatDate } from '@angular/common';
+import { CustomValidator } from '../modules/CustomValidator'
 
 @Component({
   selector: 'app-transaction',
@@ -35,17 +35,31 @@ export class TransactionComponent implements OnInit {
   addTransaction(): void {
     let transaction: TransactionInterface;
     let dateString: string = formatDate(this.transactionForm.value.date, 'MM/dd/yyyy', 'en-US');
-    let account: AccountInterface = this.getAccountByNumber(this.transactionForm.value.fromAccountNumber);
-    let amount: number = this.transactionForm.value.amount;
-    transaction = { id: 0, date: dateString, amount: amount, accountNumber: this.transactionForm.value.toAccountNumber, desc: this.transactionForm.value.desc };
-    account.transactions.push(transaction);
-    console.log('from amount', amount);
-
-    account = this.getAccountByNumber(this.transactionForm.value.toAccountNumber);
-    amount = this.transactionForm.value.amount * this.account.accountTypeSign[account.type];
-    transaction = { id: 0, date: dateString, amount: amount, accountNumber: this.transactionForm.value.fromAccountNumber, desc: this.transactionForm.value.desc };
-    account.transactions.push(transaction);
-    console.log('to amount', amount);
+    let fromAccount: AccountInterface = this.getAccountByNumber(this.transactionForm.value.fromAccountNumber);
+    let toAccount: AccountInterface = this.getAccountByNumber(this.transactionForm.value.toAccountNumber);
+    let amount: number = Math.abs(this.transactionForm.value.amount);
+    let fromSign: number;
+    let toSign: number;
+    if (this.account.accountTypeSign[fromAccount.type] + this.account.accountTypeSign[toAccount.type] === -2) {
+      // Both debit balance accounts
+      fromSign = 1;
+      toSign = -1;
+    }
+    else if (this.account.accountTypeSign[fromAccount.type] + this.account.accountTypeSign[toAccount.type] === 2) {
+      // Both credit balance account
+      fromSign = -1;
+      toSign = 1;
+    }
+    else {
+      fromSign = 1;
+      toSign = -1;
+    }
+    // From account entry
+    transaction = { id: 0, date: dateString, amount: amount * fromSign, accountNumber: this.transactionForm.value.toAccountNumber, desc: this.transactionForm.value.desc };
+    fromAccount.transactions.push(transaction);
+    // To account entry
+    transaction = { id: 0, date: dateString, amount: amount * toSign, accountNumber: this.transactionForm.value.fromAccountNumber, desc: this.transactionForm.value.desc };
+    toAccount.transactions.push(transaction);
 
     this.resetTransactionForm();
   }

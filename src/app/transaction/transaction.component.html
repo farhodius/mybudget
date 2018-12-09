@@ -51,7 +51,7 @@
           </mat-error>
         </mat-form-field>
         <mat-form-field>
-          <input matInput placeholder="Amount" formControlName="amount" required>
+          <input matInput placeholder="Amount" formControlName="amount" required type="number">
           <mat-error *ngIf="transactionForm.controls.amount.hasError('required') && transactionForm.controls.amount.touched">
             This field is required
           </mat-error>
