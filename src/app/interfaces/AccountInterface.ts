@@ -6,5 +6,6 @@ export interface AccountInterface {
     name: string;
     type: string;
     balance: number;
+    showTrn: boolean;
     transactions: TransactionInterface[];
 }

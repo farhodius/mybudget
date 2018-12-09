@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, Observer } from 'rxjs';
 import { AccountInterface } from './interfaces/AccountInterface';
 import { TransactionInterface } from './interfaces/TransactionInterface';
+import { environment } from '../environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -23,7 +24,8 @@ export class DataService {
 
     getData() {
         if (this.loaded === false) {
-            this.http.get('http://localhost:8080/budgetdata').subscribe((data: { accounts: AccountInterface[] }) => {
+            // this.http.get('http://localhost:8080/budgetdata').subscribe((data: { accounts: AccountInterface[] }) => {
+            this.http.get(environment.apiBaseUrl + '/budgetdata').subscribe((data: { accounts: AccountInterface[] }) => {
                 this.accounts = data.accounts;
                 this.loaded = true;
             });

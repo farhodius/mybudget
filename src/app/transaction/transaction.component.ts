@@ -16,7 +16,7 @@ export class TransactionComponent implements OnInit {
 
   transactionForm: FormGroup;
 
-  constructor(private data: DataService, private account: Account, private fb: FormBuilder) { }
+  constructor(public data: DataService, private account: Account, private fb: FormBuilder) { }
 
   ngOnInit() {
     this.resetTransactionForm();

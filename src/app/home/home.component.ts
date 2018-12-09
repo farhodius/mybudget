@@ -14,7 +14,7 @@ export class HomeComponent implements OnInit {
   accountTypeReport: Object = {};
   recentExpensesReport: object[] = [];
 
-  constructor(private data: DataService) { }
+  constructor(public data: DataService) { }
 
   ngOnInit() {
     this.data.dataLoadObservable.subscribe(() => { }, () => { }, () => {

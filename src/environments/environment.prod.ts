@@ -1,3 +1,5 @@
 export const environment = {
-  production: true
+  production: true,
+  myEndpoint: 'http://reportire.com',
+  apiBaseUrl: 'http://reportire.com'
 };

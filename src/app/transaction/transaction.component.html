@@ -14,14 +14,25 @@
         </thead>
         <tbody *ngFor="let a of data.accounts">
           <tr class="table-active">
-            <th colspan="5">{{a.number}} - {{a.name}}: {{account.accountBalance(a) | currency}}</th>
+            <th colspan="5">
+              <button class="btn btn-link" (click)="a.showTrn = !a.showTrn">
+                <mat-icon *ngIf="a.showTrn === true">expand_less</mat-icon>
+                <mat-icon *ngIf="a.showTrn === false">expand_more</mat-icon>
+              </button>
+              {{a.number}} - {{a.name}}: {{account.accountBalance(a) | currency}}
+            </th>
           </tr>
-          <tr *ngFor="let t of a.transactions">
-            <td>{{t.date}}</td>
-            <td class="text-right">{{t.amount * account.accountTypeSign[a.type] | currency}}</td>
-            <td>{{getAccountByNumber(t.accountNumber).name}} ({{t.accountNumber}})</td>
-            <td>{{t.desc}}</td>
-            <td></td>
+          <ng-container *ngIf="a.showTrn">
+            <tr *ngFor="let t of a.transactions">
+              <td>{{t.date}}</td>
+              <td class="text-right">{{t.amount * account.accountTypeSign[a.type] | currency}}</td>
+              <td>{{getAccountByNumber(t.accountNumber).name}} ({{t.accountNumber}})</td>
+              <td>{{t.desc}}</td>
+              <td></td>
+            </tr>
+          </ng-container>
+          <tr *ngIf="a.transactions.length == 0 && a.showTrn">
+            <td colspan="5" class="text-center text-warning">No transactions found</td>
           </tr>
         </tbody>
       </table>
