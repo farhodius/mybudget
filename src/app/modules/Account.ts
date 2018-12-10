@@ -12,7 +12,7 @@ export class Account {
         Liability: 1,
         Income: 1,
         Expense: -1
-    }
+    };
 
     accountBalance(account: AccountInterface): number {
         let balance: number = 0;
@@ -22,4 +22,6 @@ export class Account {
         });
         return balance;
     }
+
+    accountTypes:string[] = ['Asset', 'Liability', 'Income', 'Expense'];
 }

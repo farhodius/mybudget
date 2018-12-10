@@ -3,6 +3,8 @@ import { DataService } from '../data.service';
 import { AccountInterface } from '../interfaces/AccountInterface';
 import { TransactionInterface } from '../interfaces/TransactionInterface';
 import { AccountType } from '../modules/AccountType';
+import { Account } from '../modules/Account';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-home',
@@ -11,27 +13,45 @@ import { AccountType } from '../modules/AccountType';
 })
 export class HomeComponent implements OnInit {
 
-  accountTypeReport: Object = {};
-  recentExpensesReport: object[] = [];
+  summaryReport: Object[] = [];
+  recentExpensesReport: Object[] = [];
 
-  constructor(public data: DataService) { }
+  displayedColumns = ['date', 'amount', 'desc'];
+  summaryReportCols = ['type', 'balance'];
+
+  expensesChart: any[] = [];
+
+  // Chart options
+  view: any[] = [600, 330];
+
+  // options
+  showXAxis = true;
+  showYAxis = true;
+  gradient = false;
+  showLegend = true;
+  showXAxisLabel = true;
+  xAxisLabel = 'Month';
+  showYAxisLabel = true;
+  yAxisLabel = 'Amount';
+
+  colorScheme = {
+    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
+  };
+
+  constructor(public data: DataService, public account: Account) { }
 
   ngOnInit() {
     this.data.dataLoadObservable.subscribe(() => { }, () => { }, () => {
-      this.calcAccountTypeReport();
+      this.calcSummaryReport();
       this.getRecentExpenses(10);
+      this.generateExpensesChart();
     })
   }
 
-  calcAccountTypeReport(): void {
+  calcSummaryReport(): void {
     let report: Object = {};
-    let fields: string[] = [];
-    this.data.accounts.forEach(function (a: AccountInterface) {
-      if (fields.indexOf(a.type) == -1) {
-        fields.push(a.type);
-      }
-    });
-    fields.forEach(function (at: string) {
+
+    this.account.accountTypes.forEach(function (at: string) {
       report[at] = { type: at, balance: 0 };
     });
     this.data.accounts.forEach(function (a: AccountInterface) {
@@ -39,7 +59,16 @@ export class HomeComponent implements OnInit {
         report[a.type].balance += t.amount * AccountType.accountTypeSign[a.type];
       });
     });
-    this.accountTypeReport = report;
+    // Convert report to array
+    // This approach for some reason does not work with Material tables - doesn't seem to like binding of 'this'
+    // this.account.accountTypes.forEach(((at: string) => {
+    //   this.summaryReport.push(report[at]);
+    // }).bind(this));
+    let reportArr: Object[] = [];
+    this.account.accountTypes.forEach((at: string) => {
+      reportArr.push(report[at]);
+    });
+    this.summaryReport = reportArr;
   }
 
   getRecentExpenses(count: number): void {
@@ -47,7 +76,7 @@ export class HomeComponent implements OnInit {
     this.data.accounts.forEach(function (a: AccountInterface) {
       if (a.type == 'Expense') {
         a.transactions.forEach(function (t: TransactionInterface) {
-          report.push({ date: t.date, amount: t.amount * AccountType.accountTypeSign.Expense , desc: t.desc });
+          report.push({ date: t.date, amount: t.amount * AccountType.accountTypeSign.Expense, desc: t.desc });
         });
       }
     });
@@ -56,6 +85,47 @@ export class HomeComponent implements OnInit {
     });
     this.recentExpensesReport = report.slice(0, count);
 
+  }
+
+  generateExpensesChart(): void {
+    let report: object = {};
+    let months: string[] = [];
+    let date = new Date();
+    date.setDate(1);
+
+    for (let i = 1; i <= 6; i++) {
+      months.push(formatDate(date, 'MMM y', 'en-US'));
+      date = new Date(date.getTime() - 24 * 60 * 60 * 1000);
+      date.setDate(1);
+    }
+
+    months.reverse();
+
+    months.forEach(function (m: string) {
+      report[m] = { name: m, value: 0 };
+    });
+
+    this.data.accounts.forEach(function (a: AccountInterface) {
+      if (a.type === 'Expense') {
+        a.transactions.forEach(function (t: TransactionInterface) {
+          date = new Date(t.date);
+          report[formatDate(date, 'MMM y', 'en-US')].value += t.amount * -1;
+        });
+      }
+    });
+    let reportArr: Object[] = [];
+    months.forEach((m: string) => {
+      reportArr.push(report[m]);
+    });
+    this.expensesChart = reportArr;
+  };
+
+  chartBarSelect(): void {
+
+  }
+
+  currencyFormat(val) {
+    return `$${val}`;
   }
 
 }

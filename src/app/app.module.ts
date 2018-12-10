@@ -17,6 +17,9 @@ import { GlaccountComponent } from './glaccount/glaccount.component';
 import { TransactionComponent } from './transaction/transaction.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
+// Charts
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,7 +34,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     HttpClientModule,
     BrowserAnimationsModule,
     MatimportModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
